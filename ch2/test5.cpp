@@ -1,5 +1,8 @@
 //排序算法大汇总
 #include <iostream>
+#include <list>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -173,7 +176,7 @@ void MergeSort(int array[], int first, int last)
     }
 }
 //7、堆排序
-void AdjustHeap(int array[], int i, int length)//调整大顶堆
+void AdjustHeapNode(int array[], int i, int length)//调整大顶堆
 {
     // cout << "调整位置：" << i << "该位值：" << array[i] << endl;
     // cout << "调整前: " << endl;
@@ -206,27 +209,99 @@ void HeapSort(int array[], int length)
     for(int i = (length - 1) / 2; i >= 0; i--) //最后一个非叶子节点开始
     {
         cout << i << " "; 
-        AdjustHeap(array, i, length);
+        AdjustHeapNode(array, i, length);
     }
     cout << endl;
     //调整堆结构+交换堆顶元素与末尾元素
     for(int j = length - 1; j > 0; j--)
     {
         MySwap(array, 0, j);
-        AdjustHeap(array, 0, j);
+        AdjustHeapNode(array, 0, j);
+    }
+}
+//8、计数排序
+int get_max(int array[], int length)//获取数组中最大值的函数
+{
+     if(array == nullptr || length <= 0)
+        return -1;
+    int max = array[0];
+    for(int i = 1; i < length; i++)
+    {
+        if(array[i] > max)
+            max = array[i];
+    }
+    return max;
+}
+void CountSort(int array[], int length)
+{
+    if(array == nullptr || length <= 0)
+        return;
+    int max = get_max(array, length) + 1;//获取数组中的最大值
+    cout << max << endl;
+    int *count= new int[max];//分配空间
+    for(int i = 0; i < max; i++)//初始化计数数组各位为0
+        count[i] = 0;
+    // for(int i = 0; i < max; i++)
+    //     cout << count[i] << " ";
+    // cout <<endl;
+    for(int i = 0; i < length; i++)//计数
+    {
+        count[array[i]]++;
+    }
+    for(int i = 0; i < max; i++)
+        cout << count[i] << " ";
+    cout <<endl;
+    for(int i = 0, j = 0; i < max; i++)//输出到源数组，完成排序
+    {
+        for(int k = count[i]; k > 0; k--)
+        {
+            array[j] = i;
+            j++;
+        }    
+    }
+}
+//9、桶排序
+int DataMap(int num) //桶排序映射函数
+{
+    return num / 10;    
+}
+void BucketSort(int array[], int length)
+{
+    if(array == nullptr || length <= 0)
+        return;
+    //vector<list<int>> bucket;//使用双向链表来存储桶内元素，同vector来组织桶
+    list<int> bucket[10];//使用双向链表来存储桶内元素，用数组来组织桶
+    for(int i = 0; i < length; i++)
+    {
+       bucket[DataMap(array[i])].push_back(array[i]);//给对应的桶中插入，插入操作O(1)时间复杂度
+    }
+    for(int i = 0; i < 10; i++)//分别对每个桶中的元素进行排序
+    {
+        bucket[i].sort();
+    }
+    for(int i = 0, k = 0; i < 10; i++)//输出桶中的元素到序列中，完成排序
+    {
+        for(auto j : bucket[i])
+        {
+            if(k < length)
+            {    
+                array[k] = j;
+                k++;
+            }
+        }
     }
 }
 
 int main(int argc, char const *argv[])
 {
-    int data[10]={1,4,7,5,6,10,3,8,2,9};
-    //int data[9]={50,10,90,30,70,40,80,60,20};
-    for(int i = 0; i < 10; i++)
+    //int data[10]={1,4,7,5,6,10,3,8,2,9};
+    int data[20]={57,13,95,32,77 ,41,83,62,25,78 ,53,19,92,33,75 ,46,85,61,22,48};
+    for(int i = 0; i < sizeof(data)/sizeof(int); i++)
         cout << data[i] << " ";
     cout << endl;
-    HeapSort(data, 10);
+    BucketSort(data, sizeof(data)/sizeof(int));
     //MergeSort(data, 0, 9);
-    for(int i = 0; i < 10; i++)
+    for(int i = 0; i < sizeof(data)/sizeof(int); i++)
         cout << data[i] << " ";
     cout << endl;
     return 0;
