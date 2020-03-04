@@ -1,3 +1,4 @@
+//面试题7：两个栈实现一个队列
 #include <iostream>
 #include <stack>
 
