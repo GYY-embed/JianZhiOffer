@@ -172,6 +172,50 @@ void MergeSort(int array[], int first, int last)
         mergeArray(array, first, middle, last);
     }
 }
+//7、堆排序
+void AdjustHeap(int array[], int i, int length)//调整大顶堆
+{
+    // cout << "调整位置：" << i << "该位值：" << array[i] << endl;
+    // cout << "调整前: " << endl;
+    // for(int h = 0; h < 10; h++)
+    //     cout << array[h] << " ";
+    // cout << endl;
+    //int temp = array[i];
+    int k = i * 2 + 1;
+    while(k < length)
+    {
+        if(k + 1 < length && array[k] < array[k + 1])//如果左子节点小于右子节点，k指向右子节点
+            ++k;
+        if(array[k] > array[i])//如果子节点大于父节点，将子节点赋值给父节点（不用进行交换）
+        {
+            MySwap(array, i, k);
+        }
+        else   
+            break;
+        i = k;      //检查更换的节点是否满足最大堆的特性
+        k = 2 * i + 1;
+    }
+
+    // cout << "调整后: " << endl;
+    // for(int h = 0; h < 10; h++)
+    //     cout << array[h] << " ";
+}
+void HeapSort(int array[], int length)
+{
+    //构建大顶堆
+    for(int i = (length - 1) / 2; i >= 0; i--) //最后一个非叶子节点开始
+    {
+        cout << i << " "; 
+        AdjustHeap(array, i, length);
+    }
+    cout << endl;
+    //调整堆结构+交换堆顶元素与末尾元素
+    for(int j = length - 1; j > 0; j--)
+    {
+        MySwap(array, 0, j);
+        AdjustHeap(array, 0, j);
+    }
+}
 
 int main(int argc, char const *argv[])
 {
@@ -180,8 +224,8 @@ int main(int argc, char const *argv[])
     for(int i = 0; i < 10; i++)
         cout << data[i] << " ";
     cout << endl;
-    //ShellSort(data, 10);
-    MergeSort(data, 0, 9);
+    HeapSort(data, 10);
+    //MergeSort(data, 0, 9);
     for(int i = 0; i < 10; i++)
         cout << data[i] << " ";
     cout << endl;
