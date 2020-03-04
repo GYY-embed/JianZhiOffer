@@ -3,6 +3,7 @@
 #include <list>
 #include <vector>
 #include <algorithm>
+#include <string>
 
 using namespace std;
 
@@ -291,19 +292,72 @@ void BucketSort(int array[], int length)
         }
     }
 }
+//10、基数排序
+void BitCountSort(int array[], int length, int exp)//按位计数排序函数
+{
+    int range[10];
+    int temparr[length];
+    for(int i = 0; i <10; i++)
+        range[i] = 0;
+    
+    for(int i = 0; i < length; i++)
+    {
+        range[(array[i]/exp)%10]++;
+    }
+    cout << "range :" << endl;
+    for(int i = 0; i < 10; i++)
+    {
+        cout << range[i] << " ";
+    }
+    cout << endl;
+    for(int i = 1; i < 10; i++)
+    {
+        range[i] += range[i-1];//统计本应出现的位置
+    }
+    cout << "range :" << endl;
+    for(int i = 0; i < 10; i++)
+    {
+        cout << range[i] << " ";
+    }
+    cout << endl;
+    for(int i = length - 1; i >=0; i--)
+    {
+        temparr[range[(array[i]/exp)%10] - 1] = array[i];
+        range[(array[i]/exp)%10]--;
+    }
+    for(int i = 0; i < length; i++)
+    {
+        array[i] = temparr[i];
+    }
+}
+
+void RadixSort(int array[], int length)
+{
+    int max = -1;
+    //提取最大值
+    for(int i = 0; i < length; i++)
+    {
+        if(array[i] > max)
+            max = array[i];
+    }
+    //提取每一位进行比较位数不足的高位补0
+    for(int exp = 1; max/exp > 0; exp *= 10)
+        BitCountSort(array, length, exp);
+}
 
 int main(int argc, char const *argv[])
 {
     //int data[10]={1,4,7,5,6,10,3,8,2,9};
-    int data[20]={57,13,95,32,77 ,41,83,62,25,78 ,53,19,92,33,75 ,46,85,61,22,48};
+    int data[20]={57,13,95,13,77 ,41,83,62,25,78 ,53,19,92,33,75 ,46,85,61,22,48};
     for(int i = 0; i < sizeof(data)/sizeof(int); i++)
         cout << data[i] << " ";
     cout << endl;
-    BucketSort(data, sizeof(data)/sizeof(int));
+    RadixSort(data, sizeof(data)/sizeof(int));
     //MergeSort(data, 0, 9);
     for(int i = 0; i < sizeof(data)/sizeof(int); i++)
         cout << data[i] << " ";
     cout << endl;
+
     return 0;
 }
 
