@@ -37,9 +37,21 @@ int min(int num[], int length)
         else if (num[indexMid] <= num[index2])
             index2 = indexMid;
     }
-    return num[indexMid];
-     
-    
+    return num[indexMid];       
+}
+//一种更加简单的方法，去重+二分查找
+int min_faster(int num[], int length)
+{
+    int left = 0, right = length - 1;
+    int back = num[right];
+    while(left < right && num[right] == back) left++;
+    while(left < right)
+    {
+        int mid = (left + right) >> 1;
+        if(num[mid] <= back) right = mid;
+        else left = mid + 1; 
+    }
+    return num[right];
 }
 int main(int argc, char const *argv[])
 {
