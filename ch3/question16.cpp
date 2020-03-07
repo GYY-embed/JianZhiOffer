@@ -18,11 +18,15 @@ ListNode *ReverseLeist(ListNode *pHead)
     {
         ListNode *pNext = currNode->m_pNext;
         if(pNext == NULL)
+        {
+            //cout << "Last:" << currNode->m_nValue << endl;
+            currNode->m_pNext = preNode;
             rearNode = currNode;
+        }    
         currNode->m_pNext = preNode;
         preNode = currNode;
         currNode = pNext;
-        cout << "OK " << endl;
+        //cout << "OK " << endl;
     }
     return rearNode;
 }
@@ -39,6 +43,7 @@ void PrintList(ListNode *pListHead)
     ListNode *Node = pListHead;
     while(Node != NULL)
     {
+//       cout << " OK ";
         cout << Node->m_nValue << "\t" ;
         Node = Node->m_pNext;
     }
@@ -54,7 +59,7 @@ int main(int argc, char const *argv[])
     pHead = AddNode(pHead, 8);
     pHead = AddNode(pHead, 9);
     PrintList(pHead);
-    ReverseLeist(pHead);
+    pHead = ReverseLeist(pHead);
     PrintList(pHead);
     return 0;
 }
