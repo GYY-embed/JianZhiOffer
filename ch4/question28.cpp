@@ -1,43 +1,45 @@
 //面试题28：字符串的排列
 #include <iostream>
+#include <vector>
+#include <string>
 
 using namespace std;
 
 
-void permutation(char *pStr, char *pBegin)
+void permutation(string& s, int start, vector<string>& res)
 {
-    if(*pBegin == '\0')
-    {
-        cout << pStr << endl;
+    if(start == s.size()){
+        res.push_back(s);
+        return;
     }
-    else
-    {
-        for(char *pCh = pBegin; *pCh != '\0'; ++pCh)
-        {
-            cout << "OK1" << endl;
-            char temp = *pCh;
-            *pCh = *pBegin;
-            *pBegin = temp;
-            permutation(pStr, pBegin + 1);
-            temp = *pCh;
-            *pCh = *pBegin;
-            *pBegin = temp;
+    vector<bool> swapped(256, false);//记录是否交换过，防止重复
+    for(int i=start; i < (int)s.size(); i++){
+        if(swapped[s[i]]){//交换过就不用再次交换
+            continue;
         }
+        swapped[s[i]]=true;
+        swap(s[start], s[i]);
+        permutation(s, start + 1, res);
+        swap(s[start], s[i]);
     }
 }
-
-void permutation(char *pStr)
+vector<string> permutation(string s) 
 {
-    if(pStr == NULL)
-        return;
-    permutation(pStr, pStr);
+    vector<string> res;
+    permutation(s, 0, res);
+    return res;
 }
 
 
 int main(int argc, char const *argv[])
 {
     cout << "Start:" << endl;
-    char *str = "abc";
-    permutation(str);
+    char *str = "abcdefgh";
+    vector<string> vec = permutation(str);
+    for(auto i : vec)
+    {
+        cout << i << endl;
+        i+=1;
+    }     
     return 0;
 }
